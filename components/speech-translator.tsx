@@ -17,6 +17,7 @@ const LANGUAGES = [
   { code: "zh", name: "Chinese" },
   { code: "ar", name: "Arabic" },
   { code: "hi", name: "Hindi" },
+  { code: "ta", name: "Tamil" },
 ]
 
 export default function SpeechTranslator() {

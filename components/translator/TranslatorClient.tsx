@@ -159,6 +159,7 @@ export default function TranslatorClient(): JSX.Element {
             <option value="de">German</option>
             <option value="zh">Chinese (Simplified)</option>
             <option value="hi">Hindi</option>
+            <option value="ta">Tamil</option>
           </select>
           <button type="button" onClick={() => onTranslate((document.getElementById('targetLang') as HTMLSelectElement).value)}>Translate</button>
           <button type="button" onClick={onSpeak}>Speak</button>

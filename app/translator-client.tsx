@@ -3,7 +3,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 
 // Constants outside component
-const PORTS = [5002, 5003, 5004];
+// Include 5000 (FastAPI backend) plus other possible Flask ports
+const PORTS = [5000, 5002, 5003, 5004];
 const BASE_URL = 'http://127.0.0.1';
 
 export default function TranslatorClient(): JSX.Element {
@@ -168,7 +169,7 @@ export default function TranslatorClient(): JSX.Element {
       if (Array.isArray(data) && data[0]) return data[0].language
     } catch (e) {
       console.error('detect exception', e)
-      setStatus('Cannot reach language service (port 5001) — check Python server')
+  setStatus('Cannot reach language service (port 5000) — check Python server')
     }
     return null
   }
@@ -275,7 +276,8 @@ export default function TranslatorClient(): JSX.Element {
       return
     }
 
-    const target = (document.getElementById('targetLang') as HTMLSelectElement).value
+  let target = (document.getElementById('targetLang') as HTMLSelectElement).value
+  if (target === 'zh') target = 'zh-CN'
     setStatus('Detecting language...')
     
     try {
@@ -297,7 +299,7 @@ export default function TranslatorClient(): JSX.Element {
 
   function handleSpeak() {
     const out = translation && translation !== '—' ? translation : (inputRef.current?.value || '')
-    const lang = detectedLang && detectedLang !== '—' ? detectedLang : (document.getElementById('targetLang') as HTMLSelectElement).value
+  const lang = detectedLang && detectedLang !== '—' ? detectedLang : ((document.getElementById('targetLang') as HTMLSelectElement).value === 'zh' ? 'zh-CN' : (document.getElementById('targetLang') as HTMLSelectElement).value)
     speak(out, lang)
     setStatus('Speaking...')
   }
@@ -331,7 +333,8 @@ export default function TranslatorClient(): JSX.Element {
       setStatus('OCR done. Detecting language...')
       const lang = await detectLanguage(text)
       setDetectedLang(lang || 'unknown')
-      const target = (document.getElementById('targetLang') as HTMLSelectElement).value
+  let target = (document.getElementById('targetLang') as HTMLSelectElement).value
+  if (target === 'zh') target = 'zh-CN'
       const translated = await translateText(text, lang || 'auto', target)
       setTranslation(translated || 'Translation failed')
       if (translated) setHistory(h => [{ src: text, dst: translated }, ...h].slice(0, 10))
